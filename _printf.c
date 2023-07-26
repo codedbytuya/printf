@@ -15,7 +15,7 @@ int _printf(const char *format, ...)
     {
         if (*format == '%')
         {
-            format++; // Move past the '%'
+            format++; /* Move past the '%' */
 
             switch (*format)
             {
@@ -38,7 +38,7 @@ int _printf(const char *format, ...)
                     count++;
                     break;
                 default:
-                    // If the format is invalid, just print the '%' and the next character
+                    /* If the format is invalid, just print the '%' and the next character */
                     write(1, "%", 1);
                     write(1, format, 1);
                     count += 2;
@@ -47,7 +47,7 @@ int _printf(const char *format, ...)
         }
         else
         {
-            // Regular character, just print it
+            /* Regular character, just print it */
             write(1, format, 1);
             count++;
         }
@@ -58,4 +58,3 @@ int _printf(const char *format, ...)
     va_end(args);
     return count;
 }
-
