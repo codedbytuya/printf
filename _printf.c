@@ -2,14 +2,21 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+/**
+ * _printf - Custom implementation of printf
+ * @format: The format string
+ *
+ * Return: The number of characters printed
+ */
+
 int _printf(const char *format, ...)
 {
     va_list args;
-    va_start(args, format);
-
     int count = 0;
     char c;
     const char *str;
+
+    va_start(args, format);
 
     while (*format)
     {
