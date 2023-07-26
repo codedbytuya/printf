@@ -9,59 +9,42 @@
  * Return: The number of characters printed
  */
 
-int _printf(const char *format, ...)
-{
-    va_list args;
-    int count = 0;
-    char c;
-    const char *str;
+i#include <stdio.h>
+#include <stdlib.h>
 
-    va_start(args, format);
+int _printf(const char *format, ...) {
+  int count = 0;
+  va_list args;
 
-    while (*format)
-    {
-        if (*format == '%')
-        {
-            format++; /* Move past the '%' */
-
-            switch (*format)
-            {
-                case 'c':
-                    c = (char)va_arg(args, int);
-                    write(1, &c, 1);
-                    count++;
-                    break;
-                case 's':
-                    str = va_arg(args, const char *);
-                    while (*str)
-                    {
-                        write(1, str, 1);
-                        str++;
-                        count++;
-                    }
-                    break;
-                case '%':
-                    write(1, "%", 1);
-                    count++;
-                    break;
-                default:
-                    /* If the format is invalid, just print the '%' and the next character */
-                    write(1, "%", 1);
-                    write(1, format, 1);
-                    count += 2;
-                    break;
-            }
+  va_start(args, format);
+  while (*format) {
+    if (*format == '%') {
+      format++;
+      switch (*format) {
+        case 'c': {
+          char c = va_arg(args, int);
+          count += write(1, &c, 1);
+          break;
         }
-        else
-        {
-            /* Regular character, just print it */
-            write(1, format, 1);
-            count++;
+        case 's': {
+          char *str = va_arg(args, char *);
+          count += write(1, str, strlen(str));
+          break;
         }
-
-        format++;
+        case '%': {
+          count += write(1, "%", 1);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    } else {
+      count += write(1, format, 1);
     }
+    format++;
+  }
 
-    va_end(args);
-    return count;
+  va_end(args);
+  return count;
 }
