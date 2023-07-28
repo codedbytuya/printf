@@ -11,11 +11,12 @@
 int _printf(const char *format, ...)
 {
     va_list args;
+    va_start(args, format);
+
     int count = 0;
     char c;
     const char *str;
-
-    va_start(args, format);
+    int num; // To hold the integer value
 
     while (*format)
     {
@@ -38,6 +39,12 @@ int _printf(const char *format, ...)
                         str++;
                         count++;
                     }
+                    break;
+                case 'd':
+                case 'i':
+                    num = va_arg(args, int);
+                    // Function to print an integer to stdout
+                    count += print_integer(num);
                     break;
                 case '%':
                     write(1, "%", 1);
@@ -62,5 +69,36 @@ int _printf(const char *format, ...)
     }
 
     va_end(args);
+    return count;
+}
+
+// Helper function to print an integer to stdout
+int print_integer(int num)
+{
+    int count = 0;
+    char buffer[20]; // Assuming a reasonable buffer size for integer representation
+
+    // Handle negative numbers
+    if (num < 0)
+    {
+        write(1, "-", 1);
+        count++;
+        num = -num; // Convert to positive for easier handling
+    }
+
+    int i = 0;
+    do
+    {
+        buffer[i++] = '0' + (num % 10);
+        num /= 10;
+    } while (num != 0);
+
+    // Print the digits in reverse order
+    for (int j = i - 1; j >= 0; j--)
+    {
+        write(1, &buffer[j], 1);
+        count++;
+    }
+
     return count;
 }
