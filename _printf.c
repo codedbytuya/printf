@@ -1,27 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
 
 /**
- * _printf - Prints formatted output to stdout.
- *
- * @param format: A format string.
- * @param ...: A variable number of arguments.
+ * _printf - Prints output according to a format.
+ * _strlen - returns the length of a string
+ * @param format The format string.
+ * @param ... The variable arguments.
  *
  * @return The number of characters printed.
  */
 
-int _printf(const char *format, ...) {
-  /**
-   * count: The number of characters printed.
-   */
-  int count = 0;
+int _strlen(const char *str);
 
-  /**
-   * args: A variable argument list.
-   */
+int _printf(const char *format, ...) {
+  int len = 0;
   va_list args;
 
   va_start(args, format);
@@ -29,37 +23,47 @@ int _printf(const char *format, ...) {
   while (*format) {
     if (*format == '%') {
       format++;
+
       switch (*format) {
         case 'c': {
-          /**
-           * c: A character.
-           */
           char c = va_arg(args, int);
-          count += write(1, &c, 1);
+          len += write(1, &c, 1);
           break;
         }
+
         case 's': {
-          /**
-           * str: A string.
-           */
-          char *str = va_arg(args, char *);
-          count += write(1, str, strlen(str));
+          char *s = va_arg(args, char *);
+          len += write(1, s, _strlen(s));
           break;
         }
+
         case '%': {
-          count += write(1, "%", 1);
+          len += write(1, "%", 1);
           break;
         }
-        default: {
+
+        default:
           break;
-        }
       }
     } else {
-      count += write(1, format, 1);
+      len += write(1, format, 1);
     }
     format++;
   }
 
   va_end(args);
-  return count;
+
+  return len;
+}
+
+int _strlen(const char *str);
+
+
+int _strlen(const char *str) {
+  int len = 0;
+  while (*str != '\0') {
+    len++;
+    str++;
+  }
+  return len;
 }
