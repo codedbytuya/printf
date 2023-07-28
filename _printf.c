@@ -1,107 +1,65 @@
+#include <stdio.h>
+#include <stdarg.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdarg.h>
-
-int print_integer(int num); 
+#include <string.h>
 
 /**
- * _printf - Prints formatted output to the standard output stream (stdout).
- * @format: A character string containing format specifiers that control the output.
+ * _printf - Prints formatted output to stdout.
  *
- * Return: The total number of characters printed (excluding the null byte used to end output to strings).
+ * @param format: A format string.
+ * @param ...: A variable number of arguments.
+ *
+ * @return The number of characters printed.
  */
-int _printf(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
 
-    int count = 0;
-    char c;
-    const char *str;
-    int num;
+int _printf(const char *format, ...) {
+  /**
+   * count: The number of characters printed.
+   */
+  int count = 0;
 
-    while (*format)
-    {
-        if (*format == '%')
-        {
-            format++; /* Move past the '%' */
+  /**
+   * args: A variable argument list.
+   */
+  va_list args;
 
-            switch (*format)
-            {
-                case 'c':
-                    c = (char)va_arg(args, int);
-                    write(1, &c, 1);
-                    count++;
-                    break;
-                case 's':
-                    str = va_arg(args, const char *);
-                    while (*str)
-                    {
-                        write(1, str, 1);
-                        str++;
-                        count++;
-                    }
-                    break;
-                case 'd':
-                case 'i':
-                    num = va_arg(args, int);
-                    
-                    count += print_integer(num);
-                    break;
-                case '%':
-                    write(1, "%", 1);
-                    count++;
-                    break;
-                default:
-                    /* If the format is invalid, just print the '%' and the next character */
-                    write(1, "%", 1);
-                    write(1, format, 1);
-                    count += 2;
-                    break;
-            }
+  va_start(args, format);
+
+  while (*format) {
+    if (*format == '%') {
+      format++;
+      switch (*format) {
+        case 'c': {
+          /**
+           * c: A character.
+           */
+          char c = va_arg(args, int);
+          count += write(1, &c, 1);
+          break;
         }
-        else
-        {
-            /* Regular character, just print it */
-            write(1, format, 1);
-            count++;
+        case 's': {
+          /**
+           * str: A string.
+           */
+          char *str = va_arg(args, char *);
+          count += write(1, str, strlen(str));
+          break;
         }
-
-        format++;
+        case '%': {
+          count += write(1, "%", 1);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    } else {
+      count += write(1, format, 1);
     }
+    format++;
+  }
 
-    va_end(args);
-    return count;
-}
-
-
-int print_integer(int num)
-{
-    int count = 0;
-    char buffer[20];
-
-    
-    if (num < 0)
-    {
-        write(1, "-", 1);
-        count++;
-        num = -num;
-    }
-
-    int i = 0;
-    do
-    {
-        buffer[i++] = '0' + (num % 10);
-        num /= 10;
-    } while (num != 0);
-
-    
-    int j;
-    for (j = i - 1; j >= 0; j--)
-    {
-        write(1, &buffer[j], 1);
-        count++;
-    }
-
-    return count;
+  va_end(args);
+  return count;
 }
