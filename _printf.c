@@ -11,8 +11,17 @@
  *
  * @return The number of characters printed.
  */
-
 int _strlen(const char *str);
+
+
+/**
+ * _printf - Prints output according to a format.
+ * _strlen - returns the length of a string
+ * @param format The format string.
+ * @param ... The variable arguments.
+ *
+ * @return The number of characters print
+*/
 
 int _printf(const char *format, ...) {
   int len = 0;
