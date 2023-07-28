@@ -4,46 +4,64 @@
 #include "main.h"
 
 /**
- * _printf - Custom implementation of printf
- * @format: The format string
+ * _printf - Prints formatted output to the standard output stream (stdout).
+ * @format: A character string containing format specifiers that control the output.
  *
- * Return: The number of characters printed
+ * Return: The total number of characters printed (excluding the null byte used to end output to strings).
  */
+int _printf(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
 
-int _printf(const char *format, ...) {
-  int count = 0;
-  va_list args;
+    int count = 0;
+    char c;
+    const char *str;
 
-  
-  va_start(args, format);
-  while (*format) {
-    if (*format == '%') {
-      format++;
-      switch (*format) {
-        case 'c': {
-          char c = va_arg(args, int);
-          count += write(1, &c, 1);
-          break;
+    while (*format)
+    {
+        if (*format == '%')
+        {
+            format++; /* Move past the '%' */
+
+            switch (*format)
+            {
+                case 'c':
+                    c = (char)va_arg(args, int);
+                    write(1, &c, 1);
+                    count++;
+                    break;
+                case 's':
+                    str = va_arg(args, const char *);
+                    while (*str)
+                    {
+                        write(1, str, 1);
+                        str++;
+                        count++;
+                    }
+                    break;
+                case '%':
+                    write(1, "%", 1);
+                    count++;
+                    break;
+                default:
+                    /* If the format is invalid, just print the '%' and the next character */
+                    write(1, "%", 1);
+                    write(1, format, 1);
+                    count += 2;
+                    break;
+            }
         }
-        case 's': {
-          char *str = va_arg(args, char *);
-          count += write(1, str, strlen(str));
-          break;
+        else
+        {
+            /* Regular character, just print it */
+            write(1, format, 1);
+            count++;
         }
-        case '%': {
-          count += write(1, "%", 1);
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-    } else {
-      count += write(1, format, 1);
+
+        format++;
     }
-    format++;
-  }
 
-  va_end(args);
-  return count;
+    va_end(args);
+    return count;
 }
