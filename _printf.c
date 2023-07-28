@@ -12,11 +12,11 @@
 int _printf(const char *format, ...)
 {
     va_list args;
-    va_start(args, format);
-
     int count = 0;
     char c;
     const char *str;
+
+    va_start(args, format);
 
     while (*format)
     {
@@ -62,6 +62,9 @@ int _printf(const char *format, ...)
         format++;
     }
 
+    va_end(args);
+    return count;
+}
     va_end(args);
     return count;
 }
