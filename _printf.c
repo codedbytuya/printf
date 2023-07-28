@@ -1,7 +1,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "main.h"
 
 /**
  * _printf - Prints formatted output to the standard output stream (stdout).
@@ -62,9 +61,6 @@ int _printf(const char *format, ...)
         format++;
     }
 
-    va_end(args);
-    return count;
-}
     va_end(args);
     return count;
 }
